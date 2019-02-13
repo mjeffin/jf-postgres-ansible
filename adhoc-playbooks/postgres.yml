@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  become: yes
+  vars_prompt: 
+    - name: "POSTGRES_DB"
+      prompt: "Name of the database"
+    - name: "POSTGRES_USER"
+      prompt: "Name of the database user"
+    - name: "POSTGRES_PASSWORD"
+      prompt: "Postgres password"
+  roles:
+    - role: postgres
