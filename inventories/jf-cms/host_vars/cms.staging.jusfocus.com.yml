@@ -1,0 +1,2 @@
+POSTGRES_DB: 'jfcmstestdb'
+POSTGRES_USER: 'jfcmstestdbuser'

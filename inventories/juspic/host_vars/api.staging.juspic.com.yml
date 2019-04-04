@@ -1,0 +1,2 @@
+POSTGRES_DB: 'juspictestdb'
+POSTGRES_USER: 'juspictestdbuser'

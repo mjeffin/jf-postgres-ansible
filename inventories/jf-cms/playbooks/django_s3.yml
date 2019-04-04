@@ -1,0 +1,9 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Create bucket for static files
+      aws_s3:
+        bucket: jf-cms-static
+        mode: create
+        permission: 'public-read'
