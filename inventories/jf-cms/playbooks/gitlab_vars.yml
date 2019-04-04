@@ -1,0 +1,20 @@
+---
+
+- hosts: localhost
+  vars_files:
+    - ../vars.yml
+    - ~/.jfvlts/ansible_secret_vars/gitlab_secrets.yml
+  tasks:
+    - name: Create gitlab enviroment variables
+      uri:
+        url: "{{ gitlab_project_variables_url }}"
+        method: POST
+        body:
+          key: "{{ item.key }}"
+          value: "{{ item.value }}"
+        body_format: form-urlencoded
+        status_code: 201
+        validate_certs: no
+        headers:
+          PRIVATE-TOKEN: "{{ GITLAB_PRIVATE_TOKEN }}"
+      loop: "{{ gitlab_variables }}"
