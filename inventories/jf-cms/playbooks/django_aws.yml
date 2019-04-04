@@ -61,3 +61,4 @@
       s3_bucket:
         name: "{{ s3_bucket_static }}"
         policy: "{{ lookup('template','../templates/bucket_policy_media_production.json.j2') | to_json }}"
+    

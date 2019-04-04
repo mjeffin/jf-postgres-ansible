@@ -5,7 +5,15 @@
     - ../vars.yml
     - ~/.jfvlts/ansible_secret_vars/gitlab_secrets.yml
   tasks:
-    - name: Create gitlab enviroment variables
+    - name: Fetch current project variables
+      uri:
+        url: "{{ gitlab_project_variables_url }}"
+        headers:
+          PRIVATE-TOKEN: "{{ GITLAB_PRIVATE_TOKEN }}"
+        validate_certs: no
+      register: gitlab_project_variables_current
+  
+    - name: Create new gitlab enviroment variables 
       uri:
         url: "{{ gitlab_project_variables_url }}"
         method: POST
@@ -17,4 +25,4 @@
         validate_certs: no
         headers:
           PRIVATE-TOKEN: "{{ GITLAB_PRIVATE_TOKEN }}"
-      loop: "{{ gitlab_variables }}"
+      loop: "{{ gitlab_variables | difference(gitlab_project_variables_current.json)}}" # filter here! not in GET op
