@@ -1,0 +1,7 @@
+project_name: jf-cms
+s3_bucket_static: "{{ project_name }}-static"
+s3_bucket_media_testing: "{{ project_name }}-media-testing"
+s3_bucket_media_production: "{{ project_name }}-media-production"
+aws_iam_user: "{{ project_name }}-user"
+aws_iam_group: "{{ project_name }}-group"
+aws_iam_policy: "{{ project_name }}-policy" 

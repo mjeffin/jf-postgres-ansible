@@ -1,9 +1,46 @@
 ---
 
 - hosts: localhost
+  vars_files:
+    - ../vars.yml
   tasks:
     - name: Create bucket for static files
       aws_s3:
-        bucket: jf-cms-static
+        bucket: "{{ s3_bucket_static }}"
         mode: create
         permission: 'public-read'
+    
+    - name: Create bucket for media files - testing
+      aws_s3:
+        bucket: "{{ s3_bucket_media_testing }}"
+        mode: create
+        permission: 'public-read'
+
+    - name: Create bucket for media files - production
+      aws_s3:
+        bucket: "{{ s3_bucket_media_production }}"
+        mode: create
+        permission: 'public-read'
+    
+    - name: Create new IAM group for the project
+      iam:
+        iam_type: group
+        name: "{{ aws_iam_group }}"
+        state: present
+    
+    - name: Create new IAM user for the project
+      iam:
+        iam_type: user
+        name: "{{ aws_iam_user }}"
+        state: present
+        groups: "{{ aws_iam_group }}" 
+        access_key_state: create
+
+    # Create a new S3 policy with prefix per user
+    - name: Create S3 policy from template
+      iam_policy:
+        iam_type: group
+        iam_name: "{{ aws_iam_group }}"
+        policy_name: "{{ aws_iam_policy }}"
+        state: present
+        policy_json: " {{ lookup( 'template', '../templates/s3_policy.json.j2') | to_json }} "
