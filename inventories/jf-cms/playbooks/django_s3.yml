@@ -44,3 +44,20 @@
         policy_name: "{{ aws_iam_policy }}"
         state: present
         policy_json: " {{ lookup( 'template', '../templates/s3_policy.json.j2') | to_json }} "
+
+    
+    # Create a bucket, add a policy from a file, enable requester pays, enable versioning and tag
+    - name: Add s3 bucket poliy for static
+      s3_bucket:
+        name: "{{ s3_bucket_static }}"
+        policy: "{{ lookup('template','../templates/bucket_policy_static.json.j2') | to_json }}"
+    
+    - name: Add s3 bucket poliy for media testing
+      s3_bucket:
+        name: "{{ s3_bucket_static }}"
+        policy: "{{ lookup('template','../templates/bucket_policy_media_testing.json.j2') | to_json }}"
+
+    - name: Add s3 bucket poliy for media production
+      s3_bucket:
+        name: "{{ s3_bucket_static }}"
+        policy: "{{ lookup('template','../templates/bucket_policy_media_production.json.j2') | to_json }}"
