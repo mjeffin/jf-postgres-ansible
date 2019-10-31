@@ -1,0 +1,10 @@
+- hosts: all
+  vars:
+    PORT: "4444"
+    BASEURL: "http://apibase.com"
+     # role attribute flags
+  tasks:
+    - name: Copy the commonality settings
+      template:
+        src: sample.j2
+        dest: "/home/ubuntu/test.json"

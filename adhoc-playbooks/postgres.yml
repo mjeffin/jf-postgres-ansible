@@ -1,13 +1,49 @@
 ---
 
-- hosts: all
+# - hosts: all
+#   become: yes
+#   vars_prompt: 
+#     - name: "POSTGRES_DB"
+#       prompt: "Name of the database"
+#     - name: "POSTGRES_USER"
+#       prompt: "Name of the database user"
+#     - name: "POSTGRES_PASSWORD"
+#       prompt: "Postgres password"
+#   roles:
+#     - role: postgres
+
+#     ---
+- hosts: all 
   become: yes
   vars_prompt: 
-    - name: "POSTGRES_DB"
-      prompt: "Name of the database"
-    - name: "POSTGRES_USER"
-      prompt: "Name of the database user"
-    - name: "POSTGRES_PASSWORD"
-      prompt: "Postgres password"
+  - name: "POSTGRES_DB"
+    prompt: "Name of the database"
+  - name: "POSTGRES_USER"
+    prompt: "Name of the database user"
+  - name: "POSTGRES_PASSWORD"
+    prompt: "Postgres password"
+  vars:
+    ansible_python_interpreter: python3
+    ansible_ssh_user: ubuntu
+    postgresql_users:
+      - name: "{{ POSTGRES_USER }}"
+        pass: "{{ POSTGRES_PASSWORD }}"
+    # Create the databases
+    postgresql_databases:
+      - name: "{{ POSTGRES_DB }}"
+        owner: "{{ POSTGRES_USER }}"        # optional; specify the owner of the database
+        hstore: yes         # flag to install the hstore extension on this database (yes/no)
+        uuid_ossp: yes      # flag to install the uuid-ossp extension on this database (yes/no)
+        citext: yes         # flag to install the citext extension on this database (yes/no)
+        encoding: "UTF-8"   # override global {{ postgresql_encoding }} variable per database
+        lc_collate: "en_GB.UTF-8"   # override global {{ postgresql_locale }} variable per database
+        lc_ctype: "en_GB.UTF-8"     # override global {{ postgresql_ctype }} variable per database
+
+    # List of user privileges to be applied (optional)
+    postgresql_user_privileges:
+      - name: "{{ POSTGRES_USER }}"                   # user name
+        db: "{{ POSTGRES_DB }}"               # database
+        priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
+        role_attr_flags: "CREATEDB" # role attribute flags
   roles:
     - role: postgres

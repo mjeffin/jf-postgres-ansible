@@ -1,8 +1,0 @@
----
-
-- hosts: dbserver 
-  become: yes
-  vars_files:
-    - "../vaults/{{ inventory_hostname }}.yml"
-  roles:
-    - role: postgres
